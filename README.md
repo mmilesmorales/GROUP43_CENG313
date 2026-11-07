@@ -50,12 +50,12 @@ quantifying the domain gap that motivates learned rectification approaches.
 
 ## How to run the notebook
 
-1. Create a Kaggle account → *Settings → API → Create New Token* → save `kaggle.json`.
-2. Open `assignment1_eda_baseline.ipynb` in **Google Colab** (or run locally).
-3. In Section 0, follow the bootstrap cell: if the data is not already present, it
-   downloads the project's dataset (~3.5 GB zip) from our Google Drive link and
-   extracts it — no account or tokens needed.
-4. Run all cells. Requires no GPU.
+1. Open `assignment1_eda_baseline.ipynb` in **Google Colab** (or run locally in the
+   repository folder).
+2. Cell 0 clones the project code (Colab) and, on first run, downloads the dataset
+   (~2.5 GB zip) from our shared Drive link and extracts it — **no accounts or
+   tokens needed**.
+3. Run all cells. Requires no GPU.
 
 ## Repository layout
 
