@@ -12,3 +12,7 @@ __pycache__/
 ROADMAP.md
 reports/
 *.zip
+
+# artifacts & legacy local notebooks
+cv_scores.csv
+notebooks/
