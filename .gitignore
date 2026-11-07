@@ -1,0 +1,14 @@
+# data & heavy artifacts
+data/
+third_party/
+baselines/
+kaggle_push/
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# internal docs (not part of the deliverable push)
+ROADMAP.md
+reports/
+*.zip
