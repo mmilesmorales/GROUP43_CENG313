@@ -50,11 +50,15 @@ quantifying the domain gap that motivates learned rectification approaches.
 
 ## How to run the notebook
 
-1. Open `assignment1_eda_baseline.ipynb` in **Google Colab** (or run locally in the
-   repository folder).
-2. Cell 0 clones the project code (Colab) and, on first run, downloads the dataset
-   (~2.5 GB zip) from our shared Drive link and extracts it — **no accounts or
-   tokens needed**.
+This repository is **private** — running the notebook requires collaborator access.
+
+1. Open `assignment1_eda_baseline.ipynb` in **Google Colab** — best via
+   [Open in Colab](https://colab.research.google.com/github/mmilesmorales/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
+   Colab clones the private repository automatically for your logged-in collaborator
+   GitHub account.
+2. Cell 0 then downloads the dataset (~2.5 GB) from our shared Drive link — no Kaggle
+   credentials involved. If you uploaded only the notebook instead, cell 0 asks once for
+   a GitHub token (hidden input, used for a single clone, never stored).
 3. Run all cells. Requires no GPU.
 
 ## Repository layout
