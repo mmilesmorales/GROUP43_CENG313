@@ -16,3 +16,5 @@ reports/
 # artifacts & legacy local notebooks
 cv_scores.csv
 notebooks/
+onboarding_aleksei.md
+assignment1_explainer.md
