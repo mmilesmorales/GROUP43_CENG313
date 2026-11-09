@@ -11,6 +11,46 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# Team copy of the dataset subset on Google Drive (public link, ~2.5 GB zip).
+DATA_DRIVE_ID = "15VNuF-QR-IiCfIl4lqVwbvO-lLehtckv"
+
+
+# ----------------------------------------------------------------------------
+# Download
+# ----------------------------------------------------------------------------
+
+def download_dataset(dest=ROOT / "data", drive_id: str = DATA_DRIVE_ID) -> Path:
+    """Download and unpack the dataset subset into `dest`.
+
+    Does nothing if `dest/train.csv` already exists. The zip may hold the files
+    at its top level or inside a `data/` folder; both layouts work.
+    """
+    import shutil
+    import tempfile
+    import zipfile
+
+    dest = Path(dest)
+    if (dest / "train.csv").exists():
+        return dest
+
+    import gdown
+    zip_path = dest.parent / "data_subset.zip"
+    if not zip_path.exists():
+        gdown.download(id=drive_id, output=str(zip_path), quiet=False)
+    if not zip_path.exists():
+        raise RuntimeError("dataset download failed: check the Drive link and your connection")
+
+    dest.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=dest.parent) as tmp:
+        with zipfile.ZipFile(zip_path) as z:
+            z.extractall(tmp)
+        inner = Path(tmp) / "data" if (Path(tmp) / "data" / "train.csv").exists() else Path(tmp)
+        for item in inner.iterdir():
+            if not (dest / item.name).exists():
+                shutil.move(str(item), str(dest / item.name))
+    zip_path.unlink()
+    return dest
+
 
 # ----------------------------------------------------------------------------
 # Record-level split (train/val), reproducible
