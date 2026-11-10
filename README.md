@@ -1,81 +1,86 @@
-<!-- README status: DRAFT for member review — fill the placeholders marked (…) before push -->
+# GROUP43_CENG313: ECG image digitization
 
-# GROUP43_CENG313 — ECG Image Digitization (PhysioNet–Kaggle)
+CENG313 course project on the Kaggle competition
+[PhysioNet – Digitization of ECG Images](https://www.kaggle.com/competitions/physionet-ecg-image-digitization)
+(Oct 2025 – Jan 2026, now closed).
 
-Course project on the closed Kaggle competition
-["PhysioNet — Digitization of ECG Images"](https://www.kaggle.com/competitions/physionet-ecg-image-digitization)
-(Oct 2025 – Jan 2026). **Task:** reconstruct 12-lead ECG time series (mV) from images of
-paper ECGs — color/BW scans, phone photos, stains, mold, laptop-screen photographs.
+**Task:** given a picture of a printed 12-lead ECG (clean render, scan, phone photo, photo of a screen,
+stained or damaged paper), recover the 12 voltage curves in mV.
 
 ## Members
 
-| Name | Student ID | GitHub username |
-|------|-----------|-----------------|
+| Name | Student ID | GitHub |
+|---|---|---|
 | Mehmet Emircan Küllücek | 24118080060 | @mmilesmorales |
 | Aleksei Khlopkov | 23118080404 | @13cide |
 
-## Dataset
+## Data
 
-- **Inputs:** 977 training records, each with a ground-truth 12-lead time series
-  (`train/<id>/<id>.csv`, sampling rates 250–1025 Hz) and **9 imaging variants**
-  (clean render, color/BW scans, phone photos of prints, laptop-screen photos,
-  stained/soaked prints, damaged prints, mold).
-- **Target:** for each test image, the mV time series per lead — `floor(fs · 2.5 s)`
-  samples for the 11 short leads, `floor(fs · 10 s)` for lead II.
-- Local subset used here: a fixed record-level validation split (90/10, seed 0);
-  the notebook fetches a 3.5 GB subset of it via the Kaggle API (see below).
+- 977 training records. Each has a ground-truth CSV (12 leads, 10 s, sampled at 250–1025 Hz)
+  and 9 images of the same ECG (types `0001` … `0012`, `0001` is the clean render).
+- The competition is closed, so we evaluate locally. Records are split 90/10 **by record**
+  (seed 0), so all images of one ECG stay on one side.
+- Our subset (about 2.5 GB, on Google Drive) holds the validation records: ground truth for 98
+  records and all 9 images for the first 30. All scores below use those 30 records (270 images).
 
-## Approach (Assignment 1)
+## Assignment 1: EDA and baselines
 
-1. **EDA** — dataset statistics, the 9 imaging variants, and the paper's organizational
-   constants (lead rows/columns, pixel calibration ≈ 197 px/s, ≈ 79 px/mV) verified
-   against ground truth.
-2. **Baseline 1 — all-zeros:** every submitted value = 0.0 (metric anchor ≈ 0 dB).
-3. **Baseline 2 — classical CV digitization (from scratch, no ML):** grid-line
-   autocorrelation → pixel calibration → fixed paper-layout cell extraction →
-   per-column trace tracking → resampling → scoring.
-4. **Evaluation:** the official competition metric, vendored
-   (`src/metric.py`), with a record-level local validation split.
+Notebook: [`assignment1_eda_baseline.ipynb`](assignment1_eda_baseline.ipynb)
 
-## Results (local validation subset, official metric)
+- **EDA:** sampling rates and exact row counts, how the ground truth maps onto the printed page,
+  amplitude and energy per lead, Einthoven's law in the ground truth, and the nine image types.
+- **Metric tests:** how the official SNR metric reacts to offset, delay, noise, amplitude and
+  time-scale errors.
+- **Layout check:** the clean-page template (196.85 px/s, 78.74 px/mV, fixed row positions) is
+  confirmed by drawing the ground truth onto the image and measuring how much lands on ink.
+- **Baseline 1, all zeros:** predict 0 mV everywhere.
+- **Baseline 2, classical CV (no learning):** grid detection → calibration → fixed lead cells →
+  column-by-column trace following → resampling.
 
-| Baseline | Score |
+### Results (official metric, 30 validation records)
+
+| Method | Score (dB) |
 |---|---|
-| All-zeros | 0.254 dB |
-| Classical CV | 1.016 dB |
+| All zeros | 0.262 |
+| Classical CV, all 9 image types | 1.016 |
+| Classical CV, clean `0001` images only | 8.26 |
+| *Reference, not ours:* community pretrained pipeline ([link](https://github.com/Yashjamine1207/physionet-ecg-image-digitization)) | *17.989* |
 
-On clean renders the CV baseline reaches up to **+15.4 dB** per record (mean +6.95),
-while on real-world artifact variants most records fall below the zeros floor —
-quantifying the domain gap that motivates learned rectification approaches.
+The classical baseline works on clean renders but is worse than zeros on most scans and photos,
+because those pages are shifted, rotated or warped relative to the template. Details per image
+type are in section 7 of the notebook.
 
-## How to run the notebook
+## Assignment 2: proposed solution
 
-This repository is **private** — running the notebook requires collaborator access.
+Notebook: [`assignment2_solution.ipynb`](assignment2_solution.ipynb) (in progress).
 
-1. Open `assignment1_eda_baseline.ipynb` in **Google Colab** — best via
-   [Open in Colab](https://colab.research.google.com/github/mmilesmorales/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
-   Colab clones the private repository automatically for your logged-in collaborator
-   GitHub account.
-2. Cell 0 then downloads the dataset (~2.5 GB) from our shared Drive link — no Kaggle
-   credentials involved. If you uploaded only the notebook instead, cell 0 asks once for
-   a GitHub token (hidden input, used for a single clone, never stored).
-3. Run all cells. Requires no GPU.
+## How to run
+
+**Google Colab (recommended, no GPU needed)**
+1. Open the notebook from GitHub in Colab, e.g.
+   [Assignment 1 in Colab](https://colab.research.google.com/github/mmilesmorales/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
+2. Add a Colab secret named `GITHUB_TOKEN` (key icon in the left sidebar) with a GitHub token
+   that can read this private repo, and allow the notebook to access it.
+3. Run all cells. The first cell clones the repo and downloads the data subset (first run only).
+
+**Locally**
+```
+pip install -r requirements.txt
+jupyter notebook   # start from the repo root
+```
+The first cell downloads the data into `data/` if it is not there yet.
 
 ## Repository layout
 
 ```
-├── assignment1_eda_baseline.ipynb    ← Assignment-1 deliverable (EDA + baselines)
-├── src/
-│   ├── data.py        dataset loading, record-level split, lead extraction
-│   ├── metric.py      official competition metric (vendored) + local adapter
-│   ├── baseline_cv.py classical-CV digitization baseline
-│   └── utils.py       resampling, Einthoven-residual check, plotting
-└── README.md
+├── assignment1_eda_baseline.ipynb   Assignment 1: EDA and baselines
+├── assignment2_solution.ipynb       Assignment 2: our solution (in progress)
+├── requirements.txt
+└── src/
+    ├── data.py         dataset download, record-level split, ground-truth loading
+    ├── metric.py       official competition metric (vendored) + per-record helpers
+    ├── layout.py       clean-page template and the ink hit-rate check
+    ├── baseline_cv.py  classical CV baseline
+    └── utils.py        resampling, Einthoven residuals
 ```
-
-## Progress log
-
-- 2026-10-24: project scaffold; competition research
-- 2026-10-25: EDA; dataset-organization analysis; SNR harness; baselines 1–2 implemented
-- 2026-11-02: results consolidated; community-baseline comparison documented
-- (…) upcoming: Assignment-2 work
+`data/` is git-ignored.
