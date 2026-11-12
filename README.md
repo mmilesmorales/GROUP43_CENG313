@@ -62,37 +62,40 @@ Notebook: [`assignment1_eda_baseline.ipynb`](assignment1_eda_baseline.ipynb)
 | Method | Local validation, 30 records (dB) | Kaggle private (dB) |
 |---|---|---|
 | All zeros | 0.262 | 0.106 |
-| Classical CV, all 9 image types | 1.016 | -4.311 |
+| Classical CV, all 9 image types | 1.023 | -4.311 |
 | Classical CV, clean `0001` images only | 8.26 | – |
 | *Reference, not ours:* public pretrained pipeline by hengck23 ([Kaggle notebook](https://www.kaggle.com/code/hengck23/demo-submission)) | *17.989* | – |
 
 The classical baseline works on clean renders but is worse than zeros on most scans and photos,
 because those pages are shifted, rotated or warped relative to the template. Its local average is
 carried by the few clean pages, which is why it drops below zero on the hidden test.
-
-## Assignment 2: proposed solution
-
-Notebook: [`assignment2_solution.ipynb`](assignment2_solution.ipynb) (in progress, due 30 Dec 2026).
-
 ## How to run
 
-**Google Colab (recommended, no GPU needed)**
-1. Open the notebook in Colab:
-   [Assignment 1 in Colab](https://colab.research.google.com/github/ceng313-2026/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
-2. Add a Colab secret named `GITHUB_TOKEN` (key icon in the left sidebar) with a GitHub token that
-   can read this private repo, and allow the notebook to access it.
-3. Run all cells. The first cell clones the repo and downloads the data subset (first run only).
+The repository is public, so no account or token is needed. The data are downloaded
+automatically by the first cell of each notebook (our ~2.5 GB subset, from the team's Google Drive)
+into `data/`; this takes a few minutes the first time and is skipped afterwards.
 
-**Locally**
+**Option 1: Google Colab (easiest, no GPU needed)**
+1. Open [Assignment 1 in Colab](https://colab.research.google.com/github/ceng313-2026/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
+2. Runtime → Run all. The first cell clones this repo and downloads the data.
+
+The whole notebook runs in a few minutes; the classical CV baseline (section 5.2) is the slowest cell.
+
+**Option 2: locally (Python 3.10 or newer)**
 ```
+git clone https://github.com/ceng313-2026/GROUP43_CENG313.git
+cd GROUP43_CENG313
 pip install -r requirements.txt
-jupyter notebook   # start from the repo root
+jupyter notebook assignment1_eda_baseline.ipynb
 ```
-The first cell downloads the data into `data/` if it is not there yet.
+Start Jupyter from the repo root (the notebooks import code from `src/`), then run all cells.
+If the automatic download fails, download the
+[data subset zip](https://drive.google.com/file/d/15VNuF-QR-IiCfIl4lqVwbvO-lLehtckv/view)
+manually and unzip it into `data/`, so that `data/train.csv` exists.
 
-If GitHub cannot display a notebook, open it in
-[nbviewer](https://nbviewer.org/github/ceng313-2026/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb)
-or Colab.
+**Just reading:** the notebooks are committed with all outputs, so they can be read on GitHub
+without running anything. If GitHub cannot display one, use
+[nbviewer](https://nbviewer.org/github/ceng313-2026/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
 
 ## Repository layout
 
