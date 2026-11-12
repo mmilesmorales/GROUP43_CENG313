@@ -16,17 +16,6 @@ stained or damaged paper), recover the 12 voltage curves in mV.
 | Mehmet Emircan Küllücek | 24118080060 | @mmilesmorales |
 | Aleksei Khlopkov | 23118080404 | @13cide |
 
-## Current Kaggle score
-
-Late submissions (not on the leaderboard). Screenshot: [`submissions/submissions.png`](submissions/submissions.png).
-
-| Submission | Private score (dB) | Public score (dB) |
-|---|---|---|
-| Classical CV baseline | -4.311 | -4.073 |
-| All zeros | **0.106** | 0.094 |
-
-Our best score so far is the all-zeros baseline. The competition winners reached about 23 dB.
-
 ## Data
 
 - 977 training records. Each has a ground-truth CSV (12 leads, 10 s, sampled at 250–1025 Hz)
@@ -57,18 +46,22 @@ Notebook: [`assignment1_eda_baseline.ipynb`](assignment1_eda_baseline.ipynb)
 6. **Kaggle submission:** late-submission scores and why they differ from the local ones.
 7. **Conclusion:** key findings and next steps.
 
-### Results (official metric)
+### Results — local validation & Kaggle late submissions
 
-| Method | Local validation, 30 records (dB) | Kaggle private (dB) |
-|---|---|---|
-| All zeros | 0.262 | 0.106 |
-| Classical CV, all 9 image types | 1.023 | -4.311 |
-| Classical CV, clean `0001` images only | 8.26 | – |
-| *Reference, not ours:* public pretrained pipeline by hengck23 ([Kaggle notebook](https://www.kaggle.com/code/hengck23/demo-submission)) | *17.989* | – |
+Late submissions (not on the leaderboard; the competition is closed). Score screenshot:
+[`submissions/submissions.png`](submissions/submissions.png).
+
+| Method | Local validation, 30 records (dB) | Kaggle private (dB) | Kaggle public (dB) |
+|---|---|---|---|
+| All zeros | 0.262 | 0.106 | 0.094 |
+| Classical CV, all 9 image types | 1.023 | -4.311 | -4.073 |
+| Classical CV, clean `0001` images only | 8.26 | – | – |
+| *Reference, not ours:* public pretrained pipeline by hengck23 ([Kaggle notebook](https://www.kaggle.com/code/hengck23/demo-submission)) | *17.989* | – | – |
 
 The classical baseline works on clean renders but is worse than zeros on most scans and photos,
 because those pages are shifted, rotated or warped relative to the template. Its local average is
-carried by the few clean pages, which is why it drops below zero on the hidden test.
+carried by the few clean pages, which is why it drops below zero on the hidden test. For scale:
+the competition winners reached about 23 dB on the private test set.
 ## How to run
 
 The repository is public, so no account or token is needed. The data are downloaded
