@@ -1,4 +1,4 @@
-"""Shared utilities: resampling, Einthoven residual check, small plotting helpers."""
+"""Shared utilities: resampling, the Einthoven residual check and the submission table."""
 import numpy as np
 
 
@@ -42,3 +42,28 @@ def einthoven_residual(gt: 'pd.DataFrame'):  # noqa: F821  (pd imported below)
         'rms_resid_III': float(np.sqrt((resid ** 2).mean())),
         'rms_augmented_sum': float(np.sqrt(((avr[:m] + avl[:m] + avf[:m]) ** 2).mean())),
     }
+
+
+# ----------------------------------------------------------------------------
+# Kaggle submission
+# ----------------------------------------------------------------------------
+
+def submission_frame(test: 'pd.DataFrame', preds: dict = None) -> 'pd.DataFrame':  # noqa: F821
+    """Build the submission table for Kaggle from test.csv.
+
+    test:  one row per image and lead, with columns id, lead, number_of_rows.
+    preds: {(image id, lead): 1-D array in mV}. A lead that is missing, has the
+           wrong length or holds NaN/inf is written as zeros, so the file is
+           always valid for the metric.
+    Returns the columns id ("{image id}_{row}_{lead}") and value.
+    """
+    import pandas as pd
+    preds = preds or {}
+    ids, values = [], []
+    for image_id, lead, n in zip(test["id"], test["lead"], test["number_of_rows"]):
+        v = np.asarray(preds.get((image_id, lead), np.zeros(n)), dtype=np.float64)
+        if len(v) != n or not np.isfinite(v).all():
+            v = np.zeros(n)
+        ids.extend(f"{image_id}_{k}_{lead}" for k in range(n))
+        values.append(v)
+    return pd.DataFrame({"id": ids, "value": np.concatenate(values) if values else np.zeros(0)})
