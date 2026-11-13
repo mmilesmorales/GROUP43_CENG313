@@ -90,6 +90,26 @@ manually and unzip it into `data/`, so that `data/train.csv` exists.
 without running anything. If GitHub cannot display one, use
 [nbviewer](https://nbviewer.org/github/ceng313-2026/GROUP43_CENG313/blob/main/assignment1_eda_baseline.ipynb).
 
+## Kaggle submission history
+
+| Date | Kernel | Submission | Public (dB) | Private (dB) |
+|---|---|---|---|---|
+| 2026-11-11 | `physionet-late-submission-zeros` | all-zeros baseline | 0.094 | 0.106 |
+| 2026-11-11 | `physionet-cv-submission` | classical CV baseline | -4.073 | -4.311 |
+
+Screenshot: [`submissions/submissions.png`](submissions/submissions.png).
+
+## Progress log
+
+| Date | Contributor | Work |
+|---|---|---|
+| 2026-10-24 | Emircan | project scaffold, Kaggle API setup, competition research, official metric vendored into `src/` |
+| 2026-10-25 | Emircan | EDA: dataset structure, nine image variants, paper layout and calibration verified against ground truth; SNR harness validated; all-zeros and classical-CV baselines implemented |
+| 2026-11-02 | Emircan | results consolidated; community pretrained pipeline (hengck23) run as external reference on the same validation cohort (17.989 dB) |
+| 2026-11-07/11 | Emircan | dataset subset packaged (2.5 GB) and published on Drive for reproducible notebook runs; Kaggle late submissions tested, accepted and completed for both baselines (scores in the table above); score screenshot added to `submissions/` |
+| 2026-11-09–10 | Aleksei | `requirements.txt`, shared dataset downloader, `src/layout.py`, notebook restructure with per-plot interpretations, README rewrite |
+| 2026-11-12 | Aleksei | repository transferred into the course organization `ceng313-2026`; course-structure alignment (`__init__.py`, `models.py`, `submission_frame`); notebook sections numbered per the course template; Kaggle scores merged into the README results |
+
 ## Repository layout
 
 ```
